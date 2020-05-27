@@ -45,7 +45,7 @@ node {
    sh 'git clone https://Shyam_6@bitbucket.org/sample-slack/sampleScript.git'
   }
 
- def project_path="samplescript/Ansible"
+ def project_path="sampleScript/Ansible"
  dir(project_path)
  {
 stage('Deploying To Production') {
