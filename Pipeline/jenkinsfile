@@ -1,0 +1,58 @@
+properties([[$class: 'JiraProjectProperty', siteName: 'https://accelerators-stack-on-slack.atlassian.net/'], parameters([string(defaultValue: '', description: 'Select the QA number to build', name: 'QA_BUILD_NUMBER', trim: false)])])
+
+node {
+     
+  stage('Git-Checkout') {
+   sh 'rm -rf samplescript'
+   sh 'git clone -b staging https://Shyam_6@bitbucket.org/sample-slack/samplescript.git'
+  }
+  stage('Creating a folder to store artifacts'){
+    sh label: '',script: "mkdir -p /var/lib/jenkins/workspace/war-storage-uat"
+    
+    }
+    
+   stage(' Downloading Jar From Artifactory Locally To Deploy'){
+    echo "Deploying to Staging with latest QA artifact, accessing latest QA build number ${params.QA_BUILD_NUMBER}"
+    def server= Artifactory.server 'Artifactory'
+    def downloadSpec = """{
+    "files": [
+    {
+      "pattern": "debit-card-application-testing/${params.QA_BUILD_NUMBER}/*.war",
+      "target": "/var/lib/jenkins/workspace/war-storage-uat/"
+      
+    }
+    ]
+    }"""
+    server.download(downloadSpec)
+   }
+ 
+ 
+ stage('Jfrog Artifacory Upload') {
+        echo "Updating Staging artifact with latest QA artifact${params.QA_BUILD_NUMBER}"
+        def server= Artifactory.server 'Artifactory'
+                    def uploadSpec= """{
+                        "files": [{
+                        "pattern": "/var/lib/jenkins/workspace/war-storage-uat/${params.QA_BUILD_NUMBER}/*.war",
+                        "target": "debit-card-application-staging/${params.QA_BUILD_NUMBER}/"}]
+                    }"""
+        server.upload(uploadSpec)
+       
+        }
+        
+def playbook_path="samplescriptAnsible"
+dir(playbook_path) {
+stage('Deploying To Staging') {
+echo "Updating QA Build number in the path of the folder that was newly created ${params.QA_BUILD_NUMBER}"
+sh (label: 'Ansible', script: "ansible-playbook -i inventory -u staging playbook.yml --extra-vars 'QABuild=${params.QA_BUILD_NUMBER}'")
+}
+}
+
+        /*stage('Email -Notification')
+ {
+             mail to: 'devashish.kumar@mindtree.com','rohith.basavarajappa@mindtree.com'
+             subject: "Build Success:",
+             body: "Build Successfully on UAT with QA Build#${QA_BUILD_NUMBER}.;"
+   
+}*/
+
+}
