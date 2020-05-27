@@ -1,4 +1,4 @@
-properties([[$class: 'JiraProjectProperty', siteName: 'https://accelerators-stack-on-slack.atlassian.net/'], parameters([string(defaultValue: '', description: 'Select the QA number to build', name: 'QA_BUILD_NUMBER', trim: false)])])
+properties([[$class: 'JiraProjectProperty', siteName: 'https://devops-accelerators.atlassian.net/'], parameters([string(defaultValue: '', description: 'Select the QA number to build', name: 'QA_BUILD_NUMBER', trim: false)])])
 
 node {
      
