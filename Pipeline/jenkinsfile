@@ -18,7 +18,7 @@ node {
     def downloadSpec = """{
     "files": [
     {
-      "pattern": "debit-card-application-staging/${params.QA_BUILD_NUMBER}/*.war",
+      "pattern": "DebitCardApp-staging/${params.QA_BUILD_NUMBER}/*.war",
       "target": "/var/lib/jenkins/workspace/war-storage-prod/"
       
     }
@@ -34,7 +34,7 @@ node {
                     def uploadSpec= """{
                         "files": [{
                         "pattern": "/var/lib/jenkins/workspace/war-storage-prod/*.war",
-                        "target": "debit-card-application-prod/${params.QA_BUILD_NUMBER}/"}]
+                        "target": "DebitCardApp-prod/${params.QA_BUILD_NUMBER}/"}]
                     }"""
         server.upload(uploadSpec)
        
