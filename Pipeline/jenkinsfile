@@ -1,7 +1,7 @@
 node {
      
   stage('Git-Checkout') {
-   sh 'rm -rf debit_card_management_app'
+   sh 'rm -rf debitcardapp'
    sh 'git clone -b development https://Shyam_6@bitbucket.org/sample-slack/debitcardapp.git'
   }
    
