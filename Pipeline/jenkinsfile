@@ -18,7 +18,7 @@ node {
     def downloadSpec = """{
     "files": [
     {
-      "pattern": "debit-card-application-testing/${params.QA_BUILD_NUMBER}/*.war",
+      "pattern": "DebitCardApp_testing/${params.QA_BUILD_NUMBER}/*.war",
       "target": "/var/lib/jenkins/workspace/war-storage-uat/"
       
     }
@@ -34,12 +34,15 @@ node {
                     def uploadSpec= """{
                         "files": [{
                         "pattern": "/var/lib/jenkins/workspace/war-storage-uat/${params.QA_BUILD_NUMBER}/*.war",
-                        "target": "debit-card-application-staging/${params.QA_BUILD_NUMBER}/"}]
+                        "target": "DebitCardApp-staging/${params.QA_BUILD_NUMBER}/"}]
                     }"""
         server.upload(uploadSpec)
        
         }
-        
+ stage('Getting Ready For Ansible') {
+   sh 'rm -rf sampleScript'
+   sh 'git clone -b staging https://Shyam_6@bitbucket.org/sample-slack/sampleScript.git'
+  }
 def playbook_path="samplescriptAnsible"
 dir(playbook_path) {
 stage('Deploying To Staging') {
