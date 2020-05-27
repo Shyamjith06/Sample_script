@@ -72,7 +72,7 @@ sh label: 'Ansible', script: 'ansible-playbook -i inventory -u Testing playbook.
       def testIssue = [fields: [ project: [id: '10002'],
                                  summary: "QA Build Success with Build#${currentBuild.number}",
                                  description: "QA Build Success with Build#${currentBuild.number}",
-                                 issuetype: [id: '10006']]]
+                                 issuetype: [id: '10007']]]
                                  
       response = jiraNewIssue issue: testIssue
       
