@@ -59,7 +59,7 @@ sh 'mvn sonar:sonar'
    sh 'git clone -b Testing https://Shyam_6@bitbucket.org/sample-slack/sampleScript.git'
   }
    
-def playbook_path="samplescript/Ansible"
+def playbook_path="sampleScript/Ansible"
 dir(playbook_path) {
 stage('Ansible Playbook Execution') {
 sh label: 'Ansible', script: 'ansible-playbook -i inventory -u TestingVM playbook.yml'
