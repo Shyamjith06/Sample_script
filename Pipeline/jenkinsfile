@@ -69,10 +69,10 @@ sh label: 'Ansible', script: 'ansible-playbook -i inventory -u Testing playbook.
   stage('JIRA Ticket Raising')
     {
            withEnv(['JIRA_SITE=jira-site']) {
-      def testIssue = [fields: [ project: [id: '10006'],
+      def testIssue = [fields: [ project: [id: '10002'],
                                  summary: "QA Build Success with Build#${currentBuild.number}",
                                  description: "QA Build Success with Build#${currentBuild.number}",
-                                 issuetype: [id: '10001']]]
+                                 issuetype: [id: '10006']]]
                                  
       response = jiraNewIssue issue: testIssue
       
