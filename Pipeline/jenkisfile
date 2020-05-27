@@ -1,0 +1,60 @@
+properties([[$class: 'JiraProjectProperty', siteName: 'https://accelerators-stack-on-slack.atlassian.net/'], parameters([string(defaultValue: '', description: 'Select the QA number to build', name: 'QA_BUILD_NUMBER', trim: false)])])
+
+node {
+     
+  stage('Git-Checkout') {
+   sh 'rm -rf debitcardapp'
+   sh 'git clone -b master https://Shyam_6@bitbucket.org/sample-slack/debitcardapp.git'
+  }
+    stage('Creating a folder to store artifacts'){
+    sh label: '',script: "mkdir -p /var/lib/jenkins/workspace/war-storage-prod"
+    
+    }
+    
+
+  stage(' Downloading Jar From Artifactory Locally To Deploy'){
+    echo "Deploying to PROD with latest QA artifact, accessing latest QA build number ${params.QA_BUILD_NUMBER}"
+    def server= Artifactory.server 'Artifactory'
+    def downloadSpec = """{
+    "files": [
+    {
+      "pattern": "debit-card-application-staging/${params.QA_BUILD_NUMBER}/*.war",
+      "target": "/var/lib/jenkins/workspace/war-storage-prod/"
+      
+    }
+    ]
+    }"""
+    server.download(downloadSpec)
+    
+    
+   }
+ stage('Jfrog Artifacory Upload') {
+        echo "Updating to Prod artifact with latest QA artifact${params.QA_BUILD_NUMBER}"
+        def server= Artifactory.server 'Artifactory'
+                    def uploadSpec= """{
+                        "files": [{
+                        "pattern": "/var/lib/jenkins/workspace/war-storage-prod/*.war",
+                        "target": "debit-card-application-prod/${params.QA_BUILD_NUMBER}/"}]
+                    }"""
+        server.upload(uploadSpec)
+       
+        }
+
+ def project_path="samplescript/Ansible"
+ dir(project_path)
+ {
+stage('Deploying To Production') {
+echo "Updating QA Build number in the path of the folder that was newly created ${params.QA_BUILD_NUMBER}"
+sh (label: 'Ansible', script: "ansible-playbook -i inventory -u ProductionVM playbook.yml --extra-vars 'QABuild=${params.QA_BUILD_NUMBER}'")
+}
+}
+
+       /*     stage('Email -Notification')
+ {
+             mail to: 'devashish.kumar@mindtree.com',
+             subject:"build Success:",
+             body: "Build Successfully .;"
+   
+}*/
+
+}
