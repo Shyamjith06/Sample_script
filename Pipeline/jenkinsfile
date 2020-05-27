@@ -62,7 +62,7 @@ sh 'mvn sonar:sonar'
 def playbook_path="sampleScript/Ansible"
 dir(playbook_path) {
 stage('Ansible Playbook Execution') {
-sh label: 'Ansible', script: 'ansible-playbook -i inventory -u TestingVM playbook.yml'
+sh label: 'Ansible', script: 'ansible-playbook -i inventory -u Testing playbook.yml'
 }
 }
 
