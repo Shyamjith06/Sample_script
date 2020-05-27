@@ -44,10 +44,10 @@ node {
   
    stage('Getting Ready For Ansible') {
    sh 'rm -rf samplescript'
-   sh 'git clone -b development https://Shyam_6@bitbucket.org/sample-slack/samplescript.git'
+   sh 'git clone -b development https://Shyam_6@bitbucket.org/sample-slack/sampleScript.git'
   }
          
-def playbook_path="samplescript/Ansible"
+def playbook_path="sampleScript/Ansible"
 dir(playbook_path) {
 stage('Ansible Playbook Execution') {
 sh label: 'Ansible', script: 'ansible-playbook -i inventory -u DevelopmentVM playbook.yml'
