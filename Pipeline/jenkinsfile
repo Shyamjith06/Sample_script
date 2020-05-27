@@ -47,7 +47,7 @@ def playbook_path="samplescriptAnsible"
 dir(playbook_path) {
 stage('Deploying To Staging') {
 echo "Updating QA Build number in the path of the folder that was newly created ${params.QA_BUILD_NUMBER}"
-sh (label: 'Ansible', script: "ansible-playbook -i inventory -u staging playbook.yml --extra-vars 'QABuild=${params.QA_BUILD_NUMBER}'")
+sh (label: 'Ansible', script: "ansible-playbook -i inventory -u StagingVM playbook.yml --extra-vars 'QABuild=${params.QA_BUILD_NUMBER}'")
 }
 }
 
